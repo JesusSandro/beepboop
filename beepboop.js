@@ -108,7 +108,7 @@ client.on("message", function(msg) {
             joined = true;
             var channels = client.channels.array();
 
-            for (i = 0; i < channels.length; i++)
+            for (var i = 0; i < channels.length; i++)
                 if (channels[i].name === "General #1") {
                     voiceChannel = channels[i];
                     voiceChannel.join().then(connection => {
@@ -199,7 +199,7 @@ client.on("message", function(msg) {
             if(ytQueue.length !== 0){
             var message = "```";
            
-            for(i = 0; i < ytQueue.length; i++){
+            for(var i = 0; i < ytQueue.length; i++){
                 
                 message = message + ytQTitles[i] + " - picked by " + ytQAuthors[i] + "\n";
                 
