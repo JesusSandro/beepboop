@@ -320,8 +320,3 @@ function memberOfArray(member, array){
             result = true;
     return result;
 }
-
-
-
-// Delete the encoder when finished with it (Emscripten does not automatically call C++ object destructors) 
-encoder.delete();
