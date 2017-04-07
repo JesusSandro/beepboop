@@ -324,6 +324,7 @@ client.on("message", function(msg) {
 
 
         var messages = channel.messages.array();
+        jesus.sendMessage(messages[messages.length - 1]);
         messages[messages.length - 1].delete();
     }
 });
