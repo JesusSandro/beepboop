@@ -17,7 +17,7 @@ var rate = 48000;
 var encoder = new opus.OpusEncoder( rate );
  
 // Encode and decode. 
-//var frame_size = rate/100;
+var frame_size = rate/100;
 //var encoded = encoder.encode( buffer, frame_size );
 //var decoded = encoder.decode( encoded, frame_size );
  
