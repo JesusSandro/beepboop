@@ -233,6 +233,7 @@ client.on("message", function(msg) {
             else
                 volume = volume - 0.2;
             nowPlaying.setVolume(volume);
+            if(lastVolMsg !== undefined)
             lastVolMsg.delete();
             channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
@@ -244,6 +245,7 @@ client.on("message", function(msg) {
             else
                 volume = volume + 0.2;
             nowPlaying.setVolume(volume);
+            if(lastVolMsg !== undefined)
             lastVolMsg.delete();
             channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
@@ -253,11 +255,13 @@ client.on("message", function(msg) {
             if(typeof volValue === "number" && !isNaN(volValue))
                 volume = volValue*0.02;
             nowPlaying.setVolume(volume);
+            if(lastVolMsg !== undefined)
             lastVolMsg.delete();
             channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
 
         if (msg.content == "!bb volume"){
+            if(lastVolMsg !== undefined)
             lastVolMsg.delete();
             channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);}
 
