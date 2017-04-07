@@ -40,6 +40,7 @@ var ytLink;
 var ytQueue = [];
 var ytQTitles = [];
 var ytQAuthors = [];
+var lastVolMsg;
 
 var pokemonProfiles = [[]];
 
@@ -232,7 +233,8 @@ client.on("message", function(msg) {
             else
                 volume = volume - 0.2;
             nowPlaying.setVolume(volume);
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%");
+            lastVolMsg.delete();
+            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
 
         if (msg.content.substring(0, 12) === "!bb increase" && nowPlaying !== undefined){
@@ -242,7 +244,8 @@ client.on("message", function(msg) {
             else
                 volume = volume + 0.2;
             nowPlaying.setVolume(volume);
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%");
+            lastVolMsg.delete();
+            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
 
         if (msg.content.substring(0, 13) === "!bb setVolume" && nowPlaying !== undefined){
@@ -250,11 +253,13 @@ client.on("message", function(msg) {
             if(typeof volValue === "number" && !isNaN(volValue))
                 volume = volValue*0.02;
             nowPlaying.setVolume(volume);
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%"); 
+            lastVolMsg.delete();
+            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
 
         if (msg.content == "!bb volume")
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%");
+            lastVolMsg.delete();
+            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
 
         if (msg.content == "!bb nowPlaying" && nowPlaying !== undefined)
             msg.author.sendMessage("**Now playing: **" + ytLink );
