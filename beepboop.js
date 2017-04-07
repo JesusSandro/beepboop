@@ -104,7 +104,7 @@ client.on("message", function(msg) {
 
         if (msg.content === "!bb join" && !joined) {
             if(lastVolMsg === undefined)
-                lastVolMsg = msg;
+                lastVolMsg = msg.id;
             var voiceChannel;
             joined = true;
             var channels = client.channels.array();
@@ -323,8 +323,8 @@ client.on("message", function(msg) {
 
 function updateVolume(volume, channel){
     nowPlaying.setVolume(volume);
-    channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
-    lastVolMsg.delete();
+    channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message.id);
+    channel.fetchMessage(lastVolMsg).delete();
 }
 
 function memberOfArray(member, array){
