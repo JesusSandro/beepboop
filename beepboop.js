@@ -257,9 +257,9 @@ client.on("message", function(msg) {
             channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
         }
 
-        if (msg.content == "!bb volume")
+        if (msg.content == "!bb volume"){
             lastVolMsg.delete();
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
+            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);}
 
         if (msg.content == "!bb nowPlaying" && nowPlaying !== undefined)
             msg.author.sendMessage("**Now playing: **" + ytLink );
