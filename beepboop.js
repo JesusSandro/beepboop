@@ -40,6 +40,7 @@ var ytLink;
 var ytQueue = [];
 var ytQTitles = [];
 var ytQAuthors = [];
+var lastVolMsg;
 
 var pokemonProfiles = [[]];
 
@@ -102,6 +103,8 @@ client.on("message", function(msg) {
         }
 
         if (msg.content === "!bb join" && !joined) {
+            if(lastVolMsg === undefined)
+                lastVolMsg = msg;
             var voiceChannel;
             joined = true;
             var channels = client.channels.array();
@@ -117,6 +120,19 @@ client.on("message", function(msg) {
 
                 }
 
+        }
+
+        if (msg.content === "!bb leave") {
+            var volume = 0.5;
+            ytLink = "";
+            ytQueue = [];
+            ytQTitles = [];
+            ytQAuthors = [];
+            joined = false;
+            nowPlaying = undefined;
+            voiceReceiver.destroy();
+            voiceConnection.disconnect();
+            client.user.setGame();
         }
 
         if (msg.content.substring(0, 8) === "!bb play" && voiceConnection !== undefined){
@@ -220,8 +236,7 @@ client.on("message", function(msg) {
                 volume = volume - volValue*0.02;
             else
                 volume = volume - 0.2;
-            nowPlaying.setVolume(volume);
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%");
+            updateVolume(volume, channel);
         }
 
         if (msg.content.substring(0, 12) === "!bb increase" && nowPlaying !== undefined){
@@ -230,20 +245,18 @@ client.on("message", function(msg) {
                 volume = volume + volValue*0.02;
             else
                 volume = volume + 0.2;
-            nowPlaying.setVolume(volume);
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%");
+            updateVolume(volume, channel);
         }
 
         if (msg.content.substring(0, 13) === "!bb setVolume" && nowPlaying !== undefined){
             var volValue = parseInt(msg.content.split(" ")[2]);
             if(typeof volValue === "number" && !isNaN(volValue))
                 volume = volValue*0.02;
-            nowPlaying.setVolume(volume);
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%"); 
+            updateVolume(volume, channel); 
         }
 
         if (msg.content == "!bb volume")
-            channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%");
+            updateVolume(volume, channel);
 
         if (msg.content == "!bb nowPlaying" && nowPlaying !== undefined)
             msg.author.sendMessage("**Now playing: **" + ytLink );
@@ -283,12 +296,6 @@ client.on("message", function(msg) {
             voiceConnection.playFile('esbetaculo.wav').setVolume(volume);;
         }
 
-        if (msg.content === "!bb leave") {
-            joined = false;
-            voiceReceiver.destroy();
-            voiceConnection.disconnect();
-            client.user.setGame();
-        }
 
         if (msg.content === "!bb register"){
             fs.writeFile("database.txt", msg.author.user.id + ":" + password, function (){});
@@ -312,6 +319,13 @@ client.on("message", function(msg) {
         messages[messages.length - 1].delete();
     }
 });
+
+
+function updateVolume(volume, channel){
+    nowPlaying.setVolume(volume);
+    channel.sendMessage("**Current volume at: **" + Math.floor(volume*50) + "%").then(message => lastVolMsg = message);
+    lastVolMsg.delete();
+}
 
 function memberOfArray(member, array){
     result = false;
