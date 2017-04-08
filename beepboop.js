@@ -139,15 +139,15 @@ client.on("message", function(msg) {
                     var youtubeLink = msg.content.split(" ")[2];
                     ytQAuthors.push(msg.author.username);
                     ytQueue.push(youtubeLink);
-                    ytdl.getInfo(youtubeLink, function (err2, info){
-                        ytQTitles.push(info.title);           
-                    });
                     if(ytQueue.length === 1){ 
                         const stream = ytdl(youtubeLink, {filter : 'audioonly'});
                         const dispatcher = voiceConnection.playStream(stream, streamOptions);
                         nowPlaying = dispatcher;
                         nowPlaying.setVolume(volume);
                         nowPlaying.on("start", function(){
+                            ytdl.getInfo(youtubeLink, function (err2, info){
+                        ytQTitles.push(info.title);           
+                    });
                             ytLink = youtubeLink;
                             client.user.setGame("'" + ytQTitles[0] + "' picked by " + ytQAuthors[0]);           
                         }); 
