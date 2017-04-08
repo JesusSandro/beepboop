@@ -137,7 +137,6 @@ client.on("message", function(msg) {
             try{
                 if(!msg.author.bot){ //New user video
                     var youtubeLink = msg.content.split(" ")[2];
-                    jesus.sendMessage(youtubeLink);
                     ytQAuthors.push(msg.author.username);
                     ytQueue.push(youtubeLink);
                     ytdl.getInfo(youtubeLink, function (err2, info){
