@@ -111,7 +111,7 @@ client.on("message", function(msg) {
             var voiceChannel;
             joined = true;
             var channels = client.channels.array();
-            for (var chnl of channels.length)
+            for (var chnl of channels)
                 if (chnl.name === "General #1") {
                     voiceChannel = chnl;
                     voiceChannel.join().then(connection => {
