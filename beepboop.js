@@ -69,13 +69,17 @@ client.on("ready", function() {
 //Read message
 client.on("message", function(msg) {
     var channel = msg.channel;
-    //#music
-    if (channel.name === "music" && msg.content.substring(0, 18) !== "http://www.youtube") {
+
+    //Keep music channel clean
+    if (channel.name === "music" && (msg.content.substring(0, 18) !== "http://www.youtube" || msg.content.substring(0, 19) !== "https://www.youtube")) {
         msg.delete();
         msg.author.sendMessage("#music is exclusive to music links only. If the link you sent is a music but you still got this message, please contact Jesus.");
     }
-    if (msg.content.substring(0, 3) === "!bb") { //!msg.author.bot && 
 
+    //Messages that start with !bb
+    if (msg.content.substring(0, 3) === "!bb") {
+
+        //Help 
         if (msg.content === "!bb help" || msg.content === "!bb") {
             msg.author.sendMessage(
             "**Testing bot by Jesus, current features:** \n"+
@@ -102,24 +106,22 @@ client.on("message", function(msg) {
             );
         }
 
+        //Join General #1
         if (msg.content === "!bb join" && !joined) {
             var voiceChannel;
             joined = true;
             var channels = client.channels.array();
-
-            for (var i = 0; i < channels.length; i++)
-                if (channels[i].name === "General #1") {
-                    voiceChannel = channels[i];
+            for (chnl of channels.length)
+                if (chnl.name === "General #1") {
+                    voiceChannel = chnl;
                     voiceChannel.join().then(connection => {
                         voiceConnection = connection;
-                        voiceReceiver = connection.createReceiver();
-                        
+                        voiceReceiver = connection.createReceiver(); 
                     });
-
                 }
-
         }
 
+        //Leave channel
         if (msg.content === "!bb leave") {
             ytLink = "";
             ytQueue = [];
@@ -133,66 +135,54 @@ client.on("message", function(msg) {
 
         if (msg.content.substring(0, 8) === "!bb play" && voiceConnection !== undefined){
             try{
-            if(!msg.author.bot){
-                var youtubeLink = msg.content.split(" ")[2];
-            
-            
-            ytQAuthors.push(msg.author.username);
-            ytQueue.push(youtubeLink);
-            ytdl.getInfo(youtubeLink, function (err2, info){
+                if(!msg.author.bot){ //New user video
+                    var youtubeLink = msg.content.split(" ")[2];
+                    ytQAuthors.push(msg.author.username);
+                    ytQueue.push(youtubeLink);
+                    ytdl.getInfo(youtubeLink, function (err2, info){
                         ytQTitles.push(info.title);           
                     });
-            if(ytQueue.length === 1){
-                    const stream = ytdl(youtubeLink, {filter : 'audioonly'});
-                    const dispatcher = voiceConnection.playStream(stream, streamOptions);
-                    nowPlaying = dispatcher;
-                    nowPlaying.setVolume(volume);
-                    nowPlaying.on("start", function(){
-                        ytLink = youtubeLink;
-                        client.user.setGame("'" + ytQTitles[0] + "' picked by " + ytQAuthors[0]);           //"video added to queue"
-                    });
-                
-                    
-                   nowPlaying.on("end", function (once){
-                        msg.channel.sendMessage("!bb play update");
-                });
-            }
-            }else{ //bot sent message
-               
-                ytQueue.shift();
-                ytQAuthors.shift();
-                ytQTitles.shift();
-                if(ytQueue.length > 0){
-                   
-                const stream = ytdl(ytQueue[0], {filter : 'audioonly'});
-                const dispatcher = voiceConnection.playStream(stream, streamOptions);
-                    nowPlaying = dispatcher;
-                    nowPlaying.setVolume(volume);
-                    nowPlaying.on("start", function(){
-                        ytdl.getInfo(ytQueue[0], function (err2, info){
-                        ytLink = ytQueue[0];
-                        client.user.setGame("'" + info.title + "' picked by " + ytQAuthors[0]);           //"video added to queue"
-                    });
-                });
-                    
-                   nowPlaying.on("end", function (once){
-                        msg.channel.sendMessage("!bb play update");
-                });
-                }else{  
-                            client.user.setGame();
-                            ytLink = "www.youtube.com";
-                        
+                    if(ytQueue.length === 1){ 
+                        const stream = ytdl(youtubeLink, {filter : 'audioonly'});
+                        const dispatcher = voiceConnection.playStream(stream, streamOptions);
+                        nowPlaying = dispatcher;
+                        nowPlaying.setVolume(volume);
+                        nowPlaying.on("start", function(){
+                            ytLink = youtubeLink;
+                            client.user.setGame("'" + ytQTitles[0] + "' picked by " + ytQAuthors[0]);           
+                        }); 
+                        nowPlaying.on("end", function (once){
+                            msg.channel.sendMessage("!bb play update");
+                        });
+                    }
+                }else{ //bot sent message
+                    ytQueue.shift();
+                    ytQAuthors.shift();
+                    ytQTitles.shift();
+                    if(ytQueue.length > 0){
+                        const stream = ytdl(ytQueue[0], {filter : 'audioonly'});
+                        const dispatcher = voiceConnection.playStream(stream, streamOptions);
+                        nowPlaying = dispatcher;
+                        nowPlaying.setVolume(volume);
+                        nowPlaying.on("start", function(){
+                            ytdl.getInfo(ytQueue[0], function (err2, info){
+                                ytLink = ytQueue[0];
+                                client.user.setGame("'" + info.title + "' picked by " + ytQAuthors[0]);           //"video added to queue"
+                            });
+                        });
+                        nowPlaying.on("end", function (once){
+                            msg.channel.sendMessage("!bb play update");
+                        });
+                    }else{  
+                        client.user.setGame();
+                        ytLink = "www.youtube.com";            
+                    }
                 }
-            }
-
-
-
-                
             }catch(err){ 
                 msg.author.sendMessage("**The following link you tried to play is invalid:** ```" + youtubeLink + "```");
                 ytQueue.pop();
                 ytQAuthors.pop();
-        }
+            }
         }
         
 
