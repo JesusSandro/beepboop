@@ -143,7 +143,7 @@ client.on("message", function(msg) {
         }
 
         if (msg.content === "!bb token"){
-            var result[];
+            var result =[];
             url = "https://wowtoken.info/";
     
             request(url, function (error, response, body){
