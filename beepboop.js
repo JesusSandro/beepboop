@@ -143,7 +143,7 @@ client.on("message", function(msg) {
         }
 
         if (msg.content === "!bb token"){
-            var result;
+            var result[];
             url = "https://wowtoken.info/";
     
             request(url, function (error, response, body){
@@ -155,8 +155,8 @@ client.on("message", function(msg) {
                 var $ = cheerio.load(body);
                 
                 
-                result = $('table.results').find('td.buy-price').text().split("g")[1];
-                channel.sendMessage("WoW Tokens currently cost " +result.toString() + "g each.");
+                result = $('table.results').find('td.buy-price').text().split("g");
+                channel.sendMessage("**WoW Tokens** \n" + "__EU__: " + result[1] + "g\n" + "__NA__: " + result[0] + "g\n" + "__CN__: " + result[2] + "g\n" + "__TW__: " + result[3] + "g\n" + "__KR__: " + result[4] + "g\n");
 
 
             
