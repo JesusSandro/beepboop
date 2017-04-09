@@ -92,6 +92,7 @@ client.on("message", function(msg) {
             msg.author.sendMessage(
             "**Testing bot by Jesus, current features:** \n"+
             "```!bb help - shows this message \n"+
+            "!bb token - shows the current price of WoW Tokens \n" +
             "!bb join - adds BB to voice chat \n"+
             "!bb leave - removes BB from voice chat \n"+
             "!bb roll <number> - rolls a number between 1 and a given number (default 100) \n ```"+
