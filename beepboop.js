@@ -27,6 +27,14 @@ var opusEncodeStream = new opus.Encoder(rate, channels, frame_size);
 var opusDecodeStream = new opus.Decoder(rate, channels, frame_size);
 // see examples folder for a more complete example 
 
+var fs = require('fs');
+var request = require('request')
+  , cheerio = require('cheerio')
+  , URL = require('url-parse');
+
+var url;
+
+
 
 var token = "MjMwODE4Mjc5Nzg1MTAzMzYx.C71EJA.rZI_RHYY8FbLd0SM3uMLz6QeV5k";
 var lastMessage;
@@ -131,6 +139,28 @@ client.on("message", function(msg) {
             voiceReceiver.destroy();
             voiceConnection.disconnect();
             client.user.setGame();
+        }
+
+        if (msg.content === "!bb token"){
+            var result;
+            url = "https://wowtoken.info/";
+    
+            request(url, function (error, response, body){
+            if(error)
+                console.log("Error " + num);
+            else
+                {
+                
+                var $ = cheerio.load(body);
+                
+                
+                result = $('table.results').find('td.buy-price').text().split("g")[1];
+                channel.sendMessage("WoW Tokens currently cost " +result.toString() + "g each.");
+
+
+            
+                }
+            });
         }
 
         if (msg.content.substring(0, 8) === "!bb play" && voiceConnection !== undefined){
