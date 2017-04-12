@@ -79,13 +79,13 @@ client.on("message", function(msg) {
     var channel = msg.channel;
 
     //Keep music channel clean
-    if (channel.name === "music" && (msg.content.substring(0, 18) !== "http://www.youtube" || msg.content.substring(0, 19) !== "https://www.youtube")) {
+    if (channel.name === "music" && (msg.content.substring(0, 18) !== "http://www.youtube" && msg.content.substring(0, 19) !== "https://www.youtube")) {
         msg.delete();
         msg.author.sendMessage("#music is exclusive to music links only. If the link you sent is a music but you still got this message, please contact Jesus.");
     }
 
     //Messages that start with !bb
-    if (msg.content.substring(0, 3) === "!bb") {
+    else if (msg.content.substring(0, 3) === "!bb") {
 
         //Help 
         if (msg.content === "!bb help" || msg.content === "!bb") {
